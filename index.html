@@ -474,7 +474,7 @@
             border-radius: 8px;
             margin-top: 10px;
             font-size: 0.9em;
-            display: none; /* Oculto por defecto */
+            display: none;
             align-items: center;
             gap: 8px;
         }
@@ -491,6 +491,11 @@
             border: 1px solid #dc3545;
         }
 
+        .search-feedback.info {
+            background: #e3f2fd;
+            color: #1565c0;
+            border: 1px solid #1565c0;
+        }
 
         @media (max-width: 480px) {
             body { padding: 10px; }
@@ -511,7 +516,7 @@
     <div class="card">
         <!-- ALERTAS -->
         <div class="config-alert" id="configAlert">
-            ⚙️ <strong>Importante:</strong> Reemplaza "https://script.google.com/macros/s/AKfycbz_M59JdKAZ0LAvjF_Vs2yancqGoh3-CN6bSO9paNnoV4Sv1R6odQlh6ICyAgiOjyyI6A/exec" en el código.
+            ⚙️ <strong>Importante:</strong> Reemplaza "TU_GOOGLE_APPS_SCRIPT_URL" en el código con tu URL real.
         </div>
 
         <div class="info-box">
@@ -772,17 +777,33 @@
     document.getElementById('contenedor').addEventListener('input', () => {
         clearTimeout(searchTimeout);
         const contenedorInput = document.getElementById('contenedor');
-        if (contenedorInput.value.trim().length > 3) { // Busca solo si hay al menos 4 caracteres
+        if (contenedorInput.value.trim().length > 3) {
             searchTimeout = setTimeout(() => searchContenedor(contenedorInput.value.trim()), 500);
         } else {
             resetFormForNewEntry();
         }
     });
 
+    // ✅ FUNCIÓN MEJORADA: BUSCA POR CD + CONTENEDOR
     async function searchContenedor(contenedor) {
+        const ordenCD = document.getElementById('ordenCD').value.trim();
         const searchFeedback = document.getElementById('searchFeedback');
         searchFeedback.style.display = 'none';
-        searchFeedback.classList.remove('success', 'error');
+        searchFeedback.classList.remove('success', 'error', 'info');
+
+        // ⚠️ Validar que ambos campos tengan datos
+        if (!ordenCD) {
+            searchFeedback.textContent = "⚠️ Por favor completa el Número de Orden CD primero.";
+            searchFeedback.classList.add('error');
+            searchFeedback.style.display = 'flex';
+            resetFormForNewEntry();
+            return;
+        }
+
+        if (!contenedor) {
+            resetFormForNewEntry();
+            return;
+        }
 
         if (GOOGLE_APPS_SCRIPT_URL === "TU_GOOGLE_APPS_SCRIPT_URL") {
             searchFeedback.textContent = "⚙️ Configuración: URL del script no válida.";
@@ -792,7 +813,8 @@
         }
 
         try {
-            const url = `${GOOGLE_APPS_SCRIPT_URL}?action=search&contenedor=${encodeURIComponent(contenedor.toUpperCase())}`;
+            // ✅ AHORA ENVÍA AMBOS PARÁMETROS: CD + CONTENEDOR
+            const url = `${GOOGLE_APPS_SCRIPT_URL}?action=search&ordenCD=${encodeURIComponent(ordenCD.toUpperCase())}&contenedor=${encodeURIComponent(contenedor.toUpperCase())}`;
             const response = await fetch(url);
             const result = await response.json();
 
@@ -807,16 +829,16 @@
                 // Modo Nuevo Registro
                 document.getElementById('isUpdating').value = 'false';
                 searchFeedback.textContent = "➕ Nuevo registro. Completa los datos de cargue.";
-                searchFeedback.classList.add('info'); // Puedes crear un estilo 'info' si quieres
+                searchFeedback.classList.add('info');
                 searchFeedback.style.display = 'flex';
-                resetFormForNewEntry(); // Limpia y prepara para nueva entrada
+                resetFormForNewEntry();
             }
         } catch (error) {
             console.error('Error buscando contenedor:', error);
             searchFeedback.textContent = `❌ Error al buscar: ${error.message}`;
             searchFeedback.classList.add('error');
             searchFeedback.style.display = 'flex';
-            resetFormForNewEntry(); // En caso de error, también prepara para nueva entrada
+            resetFormForNewEntry();
         }
     }
 
@@ -828,7 +850,7 @@
 
         // Marcar campos de cargue como solo lectura
         document.getElementById('ordenCD').readOnly = true;
-        document.getElementById('coordinador').disabled = true; // Disabled para select
+        document.getElementById('coordinador').disabled = true;
         document.getElementById('cliente').readOnly = true;
         document.getElementById('choferCargue').readOnly = true;
 
@@ -841,7 +863,6 @@
         document.getElementById('choferCargueGroup').style.display = 'none';
         document.getElementById('choferDescargaGroup').style.display = 'block';
         document.getElementById('choferDescarga').value = data.nombreChoferDescarga || '';
-
 
         // Desactivar botones de tiempo de cargue si ya están registrados
         if (data.horaLlegadaCarga && data.horaLlegadaCarga !== 'No registrado') {
@@ -899,14 +920,14 @@
         } else {
             document.getElementById('retorno_no').checked = true;
         }
-        toggleObservaciones(); // Para aplicar la lógica de readonly
+        toggleObservaciones();
         document.getElementById('observaciones').value = data.observaciones || '';
     }
 
     function resetFormForNewEntry() {
         document.getElementById('isUpdating').value = 'false';
 
-        // Habilitar campos de cargue y limpiar
+        // Habilitar campos de cargue
         document.getElementById('ordenCD').readOnly = false;
         document.getElementById('coordinador').disabled = false;
         document.getElementById('cliente').readOnly = false;
@@ -918,14 +939,14 @@
         document.getElementById('choferCargue').classList.remove('readonly-field');
 
         document.getElementById('ordenCD').value = '';
-        document.getElementById('coordinador').value = ''; // Resetear select
+        document.getElementById('coordinador').value = '';
         document.getElementById('cliente').value = '';
         document.getElementById('choferCargue').value = '';
 
         // Mostrar chofer de cargue y ocultar el de descarga
         document.getElementById('choferCargueGroup').style.display = 'block';
         document.getElementById('choferDescargaGroup').style.display = 'none';
-        document.getElementById('choferDescarga').value = ''; // Limpiar chofer de descarga
+        document.getElementById('choferDescarga').value = '';
 
         // Resetear botones y displays de tiempo
         ['llegada_carga', 'salida_origen', 'llegada_destino', 'salida_destino'].forEach(id => {
@@ -950,13 +971,11 @@
 
         const searchFeedback = document.getElementById('searchFeedback');
         searchFeedback.style.display = 'none';
-        searchFeedback.classList.remove('success', 'error');
+        searchFeedback.classList.remove('success', 'error', 'info');
 
-        // Mantener la fecha de registro actual
         document.getElementById('registroFechaHora').value =
                 `${new Date().toLocaleDateString('es-CO')} ${new Date().toTimeString().split(' ')[0]}`;
     }
-
 
     // === ENVÍO DEL FORMULARIO ===
     async function submitForm(e) {
@@ -988,13 +1007,12 @@
         }
 
         // Validaciones específicas para cargue/descargue
-        if (!isUpdating) { // Si es un nuevo registro (cargue)
+        if (!isUpdating) {
             if (!ordenCD.trim()) { alert('⚠️ Por favor indique el número de Orden CD.'); return; }
             if (!choferCargue.trim()) { alert('⚠️ Por favor indique el nombre del chofer de cargue.'); return; }
-        } else { // Si es una actualización (descargue)
+        } else {
             if (!choferDescarga.trim()) { alert('⚠️ Por favor indique el nombre del chofer de descarga.'); return; }
         }
-
 
         const formData = {
             fechaHoraRegistro: document.getElementById('registroFechaHora').value,
@@ -1003,7 +1021,7 @@
             cliente: cliente.trim(),
             contenedor: contenedor.toUpperCase(),
             nombreChoferCargue: choferCargue.trim(),
-            nombreChoferDescarga: choferDescarga.trim(), // Se enviará vacío si no es de descarga
+            nombreChoferDescarga: choferDescarga.trim(),
             horaLlegadaCarga: document.getElementById('time_llegada_carga').value || '',
             horaSalidaOrigen: document.getElementById('time_salida_origen').value || '',
             horaLlegadaDestino: document.getElementById('time_llegada_destino').value || '',
@@ -1022,7 +1040,7 @@
                 method: 'POST',
                 body: JSON.stringify(formData),
                 headers: {
-                    'Content-Type': 'text/plain;charset=utf-8', // Importante para Apps Script
+                    'Content-Type': 'text/plain;charset=utf-8',
                 },
             });
 
@@ -1064,16 +1082,14 @@
         document.getElementById('coordinador').classList.remove('readonly-field');
         document.getElementById('cliente').readOnly = false;
         document.getElementById('cliente').classList.remove('readonly-field');
-        document.getElementById('contenedor').readOnly = false; // El contenedor siempre debería ser editable para buscar
+        document.getElementById('contenedor').readOnly = false;
         document.getElementById('choferCargue').readOnly = false;
         document.getElementById('choferCargue').classList.remove('readonly-field');
-        document.getElementById('choferDescarga').readOnly = false; // aunque esté oculto
+        document.getElementById('choferDescarga').readOnly = false;
         document.getElementById('choferDescarga').classList.remove('readonly-field');
 
-        // Asegurarse de que solo choferCargue esté visible al resetear
         document.getElementById('choferCargueGroup').style.display = 'block';
         document.getElementById('choferDescargaGroup').style.display = 'none';
-
 
         ['llegada_carga','salida_origen','llegada_destino','salida_destino'].forEach(id => {
             const display = document.getElementById('display_' + id);
@@ -1094,14 +1110,12 @@
         obs.classList.remove('readonly-field');
 
         document.getElementById('registroFechaHora').value = '';
-        updateClock(); // Refresca el reloj y la fecha/hora de registro
+        updateClock();
 
-        // Asegurar que el searchFeedback esté oculto
         const searchFeedback = document.getElementById('searchFeedback');
         searchFeedback.style.display = 'none';
         searchFeedback.classList.remove('success', 'error', 'info');
 
-        // Indicar que no estamos en modo actualización
         document.getElementById('isUpdating').value = 'false';
     }
 
@@ -1109,8 +1123,7 @@
         if (GOOGLE_APPS_SCRIPT_URL === "TU_GOOGLE_APPS_SCRIPT_URL") {
             document.getElementById('configAlert').classList.add('show');
         }
-        updateClock(); // Asegura que la fecha/hora inicial se establezca al cargar
-        // Ocultar campo de chofer de descarga al cargar inicialmente
+        updateClock();
         document.getElementById('choferDescargaGroup').style.display = 'none';
     });
 </script>
