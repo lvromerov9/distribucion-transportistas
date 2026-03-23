@@ -975,15 +975,14 @@
         if (!coordinador) { alert('⚠️ Por favor seleccione un coordinador.'); return; }
         if (!cliente.trim()) { alert('⚠️ Por favor indique el nombre del cliente.'); return; }
         if (!contenedor.trim()) { alert('⚠️ Por favor anote el número de contenedor.'); return; }
-        if (!retorno) { alert('⚠️ Por favor indique si retorna con carga o vacío.'); return; }
-
+        
         const obsVal = document.getElementById('observaciones').value.trim();
         if (retorno.value === 'Si' && !obsVal) {
             alert('⚠️ Por favor complete las observaciones del chofer.');
             return;
         }
 
-        if (GOOGLE_APPS_SCRIPT_URL === "TU_GOOGLE_APPS_SCRIPT_URL") {
+        if (GOOGLE_APPS_SCRIPT_URL === "https://script.google.com/macros/s/AKfycbz_M59JdKAZ0LAvjF_Vs2yancqGoh3-CN6bSO9paNnoV4Sv1R6odQlh6ICyAgiOjyyI6A/exec") {
             showErrorModal("⚠️ Error: Reemplaza 'TU_GOOGLE_APPS_SCRIPT_URL' con tu URL real.");
             return;
         }
@@ -1107,7 +1106,7 @@
     }
 
     window.addEventListener('load', () => {
-        if (GOOGLE_APPS_SCRIPT_URL === "TU_GOOGLE_APPS_SCRIPT_URL") {
+        if (GOOGLE_APPS_SCRIPT_URL === "https://script.google.com/macros/s/AKfycbz_M59JdKAZ0LAvjF_Vs2yancqGoh3-CN6bSO9paNnoV4Sv1R6odQlh6ICyAgiOjyyI6A/exec") {
             document.getElementById('configAlert').classList.add('show');
         }
         updateClock(); // Asegura que la fecha/hora inicial se establezca al cargar
