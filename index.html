@@ -5,1129 +5,802 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Operaciones de Distribución</title>
     <style>
-        * {
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
             margin: 0;
-            padding: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
         .container {
-            max-width: 720px;
-            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 700px;
+            box-sizing: border-box;
         }
 
         .header {
             text-align: center;
-            padding: 30px 20px;
-            background: linear-gradient(135deg, #e94560, #c62a47);
-            border-radius: 20px 20px 0 0;
-            color: white;
-            box-shadow: 0 4px 20px rgba(233, 69, 96, 0.4);
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
         }
 
         .header h1 {
-            font-size: 1.8em;
-            font-weight: 800;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 2.2em;
         }
 
         .header p {
-            margin-top: 8px;
-            font-size: 0.9em;
-            opacity: 0.9;
+            color: #7f8c8d;
+            font-size: 1.1em;
         }
 
         .truck-icon {
             font-size: 3em;
-            margin-bottom: 10px;
+            color: #2ecc71;
             display: block;
+            margin-bottom: 10px;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.97);
-            border-radius: 0 0 20px 20px;
+            background-color: #fdfdfd;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
             padding: 25px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        }
-
-        .section {
-            background: #f8f9ff;
-            border-radius: 15px;
-            padding: 20px;
             margin-bottom: 20px;
-            border-left: 5px solid #e94560;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
-        .section-title {
-            font-size: 1.05em;
-            font-weight: 700;
-            color: #1a1a2e;
-            margin-bottom: 18px;
+        .card h2 {
+            color: #34495e;
+            font-size: 1.5em;
+            margin-top: 0;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
-        .section-title span {
-            background: linear-gradient(135deg, #e94560, #c62a47);
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.85em;
-            font-weight: 800;
-            flex-shrink: 0;
+        .card h2 .icon {
+            margin-right: 10px;
+            font-size: 1.2em;
+            color: #3498db;
         }
 
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
 
-        label {
+        .form-group label {
             display: block;
-            font-size: 0.88em;
+            margin-bottom: 7px;
+            color: #555;
             font-weight: 600;
-            color: #444;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
+            font-size: 0.95em;
         }
 
-        input[type="text"],
-        select,
-        textarea {
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select,
+        .form-group textarea {
             width: 100%;
             padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 0.95em;
-            color: #333;
-            background: white;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1em;
+            box-sizing: border-box;
             transition: border-color 0.3s, box-shadow 0.3s;
-            font-family: inherit;
         }
 
-        input[type="text"]:focus,
-        select:focus,
-        textarea:focus {
+        .form-group input[type="text"]:focus,
+        .form-group input[type="number"]:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #2ecc71;
+            box-shadow: 0 0 5px rgba(46, 204, 113, 0.3);
             outline: none;
-            border-color: #e94560;
-            box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.15);
         }
 
-        textarea {
+        .form-group textarea {
             resize: vertical;
-            min-height: 90px;
+            min-height: 80px;
         }
 
-        .time-group {
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            font-weight: normal;
+        }
+
+        .radio-group input[type="radio"] {
+            margin-right: 8px;
+            transform: scale(1.1);
+        }
+
+        .btn-submit {
+            background-color: #2ecc71;
+            color: white;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            width: 100%;
+            transition: background-color 0.3s, transform 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-submit:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
+        }
+
+        .btn-submit:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: none; /* Oculto por defecto */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .config-alert {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+            display: none; /* Oculto por defecto, se muestra si la URL no está configurada */
+        }
+
+        .info-box {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.95em;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .time-display {
-            flex: 1;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 1em;
-            color: #333;
-            background: #fafafa;
-            font-weight: 600;
-            min-height: 48px;
-            display: flex;
-            align-items: center;
-        }
-
-        .time-display.captured {
-            border-color: #2ecc71;
-            background: #f0fff4;
-            color: #27ae60;
-        }
-
-        .btn-time {
-            padding: 12px 18px;
-            background: linear-gradient(135deg, #e94560, #c62a47);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 0.85em;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            white-space: nowrap;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 3px 10px rgba(233, 69, 96, 0.3);
-        }
-
-        .btn-time:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
-        }
-
-        .btn-time:active {
-            transform: translateY(0);
-        }
-
-        .btn-time:disabled {
-            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .btn-time.captured {
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
-            box-shadow: 0 3px 10px rgba(46, 204, 113, 0.3);
-        }
-
-        .radio-group {
-            display: flex;
-            gap: 15px;
-        }
-
-        .radio-option {
-            flex: 1;
-            position: relative;
-        }
-
-        .radio-option input[type="radio"] {
-            display: none;
-        }
-
-        .radio-option label {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 14px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 700;
-            transition: all 0.3s;
-            background: white;
-            text-transform: none;
-            letter-spacing: 0;
-        }
-
-        .radio-option input[type="radio"]:checked + label {
-            border-color: #e94560;
-            background: linear-gradient(135deg, #e94560, #c62a47);
-            color: white;
-            box-shadow: 0 3px 10px rgba(233, 69, 96, 0.3);
-        }
-
-        .radio-option label:hover {
-            border-color: #e94560;
-            background: rgba(233, 69, 96, 0.05);
-        }
-
+        /* Estilos para el reloj */
         .datetime-display {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            font-size: 0.9em;
+            align-items: center;
+            background-color: #ecf0f1;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+            font-size: 1.1em;
+            color: #34495e;
         }
 
         .datetime-display .date-info {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
+            text-align: left;
+            flex-grow: 1;
         }
 
         .datetime-display .date-val {
-            font-size: 1.1em;
             font-weight: 700;
+            display: block;
+            margin-top: 5px;
+            color: #2c3e50;
         }
 
         .datetime-display .time-val {
-            font-size: 1.4em;
-            font-weight: 800;
-            color: #e94560;
+            font-weight: 700;
+            font-size: 1.3em;
+            color: #e74c3c;
         }
 
-        .btn-submit {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, #e94560, #c62a47);
+        .datetime-display .btn-modal {
+            background-color: #3498db;
             color: white;
+            padding: 8px 15px;
             border: none;
-            border-radius: 15px;
-            font-size: 1.1em;
-            font-weight: 800;
+            border-radius: 5px;
             cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            box-shadow: 0 5px 20px rgba(233, 69, 96, 0.4);
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            font-size: 0.9em;
+            margin-left: 15px;
+            transition: background-color 0.3s;
         }
 
-        .btn-submit:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(233, 69, 96, 0.5);
+        .datetime-display .btn-modal:hover {
+            background-color: #2980b9;
         }
 
-        .btn-submit:active:not(:disabled) {
-            transform: translateY(0);
-        }
-
-        .btn-submit:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .success-modal {
-            display: none;
+        /* Modal Base */
+        .modal-overlay {
             position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.6);
-            z-index: 1000;
-            align-items: center;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
             justify-content: center;
-            padding: 20px;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
-        .success-modal.show {
-            display: flex;
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
         }
 
         .modal-content {
-            background: white;
-            border-radius: 20px;
-            padding: 35px;
-            max-width: 380px;
-            width: 100%;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
             text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 400px;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
         }
 
-        @keyframes popIn {
-            from { transform: scale(0.7); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
         }
 
         .modal-icon {
-            font-size: 4em;
-            margin-bottom: 15px;
+            font-size: 3em;
+            margin-bottom: 20px;
         }
 
         .modal-content h2 {
-            color: #1a1a2e;
-            font-size: 1.4em;
-            margin-bottom: 10px;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #333;
         }
 
         .modal-content p {
             color: #666;
             margin-bottom: 25px;
-            font-size: 0.95em;
+            line-height: 1.5;
         }
 
-        .btn-modal {
-            padding: 12px 35px;
-            background: linear-gradient(135deg, #e94560, #c62a47);
+        .modal-content .btn-modal {
+            background-color: #2ecc71;
             color: white;
+            padding: 10px 20px;
             border: none;
-            border-radius: 10px;
-            font-size: 1em;
-            font-weight: 700;
+            border-radius: 5px;
             cursor: pointer;
-            transition: all 0.3s;
+            font-size: 1em;
+            transition: background-color 0.3s;
         }
 
-        .btn-modal:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
+        .modal-content .btn-modal:hover {
+            background-color: #27ae60;
         }
 
-        .error-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.6);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+        .success-modal .modal-icon {
+            color: #2ecc71;
         }
-
-        .error-modal.show {
-            display: flex;
-        }
-
-        .error-modal .modal-content {
-            border-top: 4px solid #e74c3c;
-        }
-
         .error-modal .modal-icon {
             color: #e74c3c;
         }
 
-        .subsection-title {
-            font-size: 0.82em;
-            font-weight: 700;
-            color: #e94560;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-            margin-top: 18px;
-            padding-bottom: 6px;
-            border-bottom: 2px dashed #e94560;
-        }
-
-        .subsection-title:first-of-type {
-            margin-top: 0;
-        }
-
-        .empty-note {
-            font-size: 0.8em;
-            color: #999;
-            margin-top: 5px;
-            font-style: italic;
-        }
-
-        .config-alert {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 12px 15px;
-            border-radius: 8px;
-            font-size: 0.85em;
-            color: #856404;
+        /* Estilos para el campo de búsqueda */
+        .search-group {
+            display: flex;
+            gap: 10px;
             margin-bottom: 20px;
-            display: none;
+            align-items: flex-end;
         }
-
-        .config-alert.show {
-            display: block;
+        .search-group input[type="text"] {
+            flex-grow: 1;
         }
-
-        .config-alert strong {
-            color: #d39e00;
-        }
-
-        .info-box {
-            background: #e3f2fd;
-            border-left: 4px solid #2196F3;
-            padding: 12px 15px;
-            border-radius: 8px;
-            font-size: 0.85em;
-            color: #1565c0;
-            margin-bottom: 20px;
-        }
-
-        .info-box strong {
-            color: #0d47a1;
-        }
-
-        /* Estilo para campos solo lectura */
-        .readonly-field {
-            background: #f0f0f0 !important;
-            color: #555 !important;
-            cursor: not-allowed !important;
-        }
-
-        .search-feedback {
-            padding: 8px 12px;
-            border-radius: 8px;
-            margin-top: 10px;
-            font-size: 0.9em;
-            display: none;
+        .search-group button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+            height: 44px; /* Alinear con el input */
+            display: flex;
             align-items: center;
             gap: 8px;
         }
-
-        .search-feedback.success {
-            background: #e6ffe6;
-            color: #28a745;
-            border: 1px solid #28a745;
+        .search-group button:hover {
+            background-color: #0056b3;
+        }
+        .search-group button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
         }
 
-        .search-feedback.error {
-            background: #ffe6e6;
-            color: #dc3545;
-            border: 1px solid #dc3545;
+        #searchFeedback {
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: -10px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            display: none; /* Oculto por defecto */
+            align-items: center;
+            gap: 8px;
+        }
+        #searchFeedback.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        #searchFeedback.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        #searchFeedback.info {
+            background-color: #cfe2ff;
+            color: #052c65;
+            border: 1px solid #b6d4fe;
         }
 
-        .search-feedback.info {
-            background: #e3f2fd;
-            color: #1565c0;
-            border: 1px solid #1565c0;
-        }
-
-        @media (max-width: 480px) {
-            body { padding: 10px; }
-            .header h1 { font-size: 1.4em; }
-            .btn-time { padding: 10px 12px; font-size: 0.78em; }
-            .radio-group { gap: 10px; }
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            .header h1 {
+                font-size: 1.8em;
+            }
+            .header p {
+                font-size: 1em;
+            }
+            .form-group input, .form-group select, .form-group textarea, .btn-submit {
+                padding: 10px 12px;
+                font-size: 0.95em;
+            }
+            .search-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-group button {
+                width: 100%;
+            }
+            .datetime-display {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .datetime-display .btn-modal {
+                margin-left: 0;
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="header">
-        <span class="truck-icon">🚛</span>
-        <h1>Operaciones de Distribución</h1>
-        <p>Control de Horas y Sobreestadía</p>
-    </div>
-
-    <div class="card">
-        <!-- ALERTAS -->
-        <div class="config-alert" id="configAlert">
-            ⚙️ <strong>Importante:</strong> Reemplaza "TU_GOOGLE_APPS_SCRIPT_URL" en el código con tu URL real.
+    <div class="container">
+        <div class="header">
+            <span class="truck-icon">🚛</span>
+            <h1>Operaciones de Distribución</h1>
+            <p>Control de Horas y Sobreestadía</p>
         </div>
 
-        <div class="info-box">
-            📊 <strong>Indicadores:</strong> Los datos se guardan automáticamente en Google Sheets. Revisa tu hoja "Indicadores" para ver métricas en tiempo real.
-        </div>
-
-        <!-- Reloj en tiempo real -->
-        <div class="datetime-display">
-            <div class="date-info">
-                <span style="opacity:0.7; font-size:0.85em;">📅 Fecha de Registro</span>
-                <span class="date-val" id="currentDate">--</span>
+        <div class="card">
+            <!-- ALERTAS -->
+            <div class="config-alert" id="configAlert">
+                ⚙️ <strong>Importante:</strong> Reemplaza "TU_GOOGLE_APPS_SCRIPT_URL" en el código con tu URL real.
             </div>
-            <div>
-                <span class="time-val" id="currentTime">--:--:--</span>
+
+            <div class="info-box">
+                📊 <strong>Indicadores:</strong> Los datos se guardan automáticamente en Google Sheets. Revisa tu hoja "Indicadores" para ver métricas en tiempo real.
             </div>
-        </div>
 
-        <form id="mainForm" onsubmit="submitForm(event)">
-
-            <!-- SECCIÓN 1: IDENTIFICADOR -->
-            <div class="section">
-                <div class="section-title">
-                    <span>1</span> Identificador de Operación
+            <!-- Reloj en tiempo real -->
+            <div class="datetime-display">
+                <div class="date-info">
+                    <span style="opacity:0.7; font-size:0.85em;">📅 Fecha de Registro</span>
+                    <span class="date-val" id="currentDate">--</span>
                 </div>
-
-                <div class="form-group">
-                    <label>📅 Fecha y Hora de Registro</label>
-                    <input type="text" id="registroFechaHora" readonly
-                           placeholder="Se captura automáticamente al iniciar"
-                           class="readonly-field">
-                </div>
-
-                <div class="form-group">
-                    <label>📋 Número de Orden CD</label>
-                    <input type="text" id="ordenCD" placeholder="Ej: CD-00001" required
-                           style="text-transform: uppercase;">
-                </div>
-
-                <div class="form-group">
-                    <label>📦 Número de Contenedor</label>
-                    <input type="text" id="contenedor" placeholder="Ej: EGSU1537691 (Sin " - ")" required
-                           style="text-transform: uppercase;">
-                    <div class="search-feedback" id="searchFeedback"></div>
-                </div>
-
-                <div class="form-group">
-                    <label>👤 Elija su Coordinador</label>
-                    <select id="coordinador" required>
-                        <option value="">-- Seleccione un coordinador --</option>
-                        <option value="Lourdes Romero">Lourdes Romero</option>
-                        <option value="Sindy Saenz">Sindy Saenz</option>
-                        <option value="Otros">Otros</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>🏢 Nombre del Cliente Final</label>
-                    <input type="text" id="cliente" placeholder="Ej: Nirsa, Holcim, Kce..." required
-                           style="text-transform: capitalize;">
-                </div>
-
-                 <div class="form-group" id="choferCargueGroup">
-                    <label>👨‍✈️ Nombre del Chofer (Cargue)</label>
-                    <input type="text" id="choferCargue" placeholder="Ej: Juan Pérez"
-                           style="text-transform: capitalize;">
-                </div>
-
-                <div class="form-group" id="choferDescargaGroup" style="display:none;">
-                    <label>👨‍✈️ Nombre del Chofer (Descarga)</label>
-                    <input type="text" id="choferDescarga" placeholder="Ej: María García"
-                           style="text-transform: capitalize;">
+                <div>
+                    <span class="time-val" id="currentTime">--:--:--</span>
+                    <button class="btn-modal" onclick="resetForm()">Nueva Operación</button>
                 </div>
             </div>
 
-            <!-- SECCIÓN 2: CONTROL DE HORAS -->
-            <div class="section">
-                <div class="section-title">
-                    <span>2</span> Control de Horas de Sobreestadía
+            <form id="mainForm" onsubmit="submitForm(event)">
+                <input type="hidden" id="registroFechaHora" name="registroFechaHora">
+                <input type="hidden" id="isUpdating" value="false">
+
+                <div class="card">
+                    <h2><span class="icon">🔍</span> Buscar y Cargar</h2>
+                    <div class="search-group">
+                        <input type="text" id="ordenCDSearch" placeholder="Buscar por Nro. Orden CD" required>
+                        <input type="text" id="contenedorSearch" placeholder="Buscar por Nro. Contenedor" required>
+                        <button type="button" onclick="searchData()">
+                            <span id="searchBtnText">Buscar</span>
+                            <div class="spinner" id="searchBtnSpinner"></div>
+                        </button>
+                    </div>
+                    <div id="searchFeedback"></div>
                 </div>
 
-                <div class="subsection-title">🏭 Operación de Retiro o Cargue</div>
-
-                <div class="form-group">
-                    <label>⏱️ Hora de Llegada a Cargar</label>
-                    <div class="time-group">
-                        <div class="time-display" id="display_llegada_carga">Sin registrar</div>
-                        <button type="button" class="btn-time" id="btn_llegada_carga"
-                                onclick="captureTime('llegada_carga')">
-                            ⏰ Registrar
-                        </button>
+                <div class="card">
+                    <h2><span class="icon">📋</span> Detalles de la Operación</h2>
+                    <div class="form-group">
+                        <label for="ordenCD">Número de Orden CD:</label>
+                        <input type="text" id="ordenCD" name="ordenCD" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="coordinador">Coordinador:</label>
+                        <select id="coordinador" name="coordinador" required>
+                            <option value="">Seleccione un coordinador</option>
+                            <option value="Lourdes Romero">Lourdes Romero</option>
+                            <option value="Cindy Saenz">Cindy Saenz</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cliente">Cliente Final:</label>
+                        <input type="text" id="cliente" name="cliente" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contenedor">Número de Contenedor:</label>
+                        <input type="text" id="contenedor" name="contenedor" required readonly>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label>🚪 Hora de Salida de Bodega Origen</label>
-                    <div class="time-group">
-                        <div class="time-display" id="display_salida_origen">Sin registrar</div>
-                        <button type="button" class="btn-time" id="btn_salida_origen"
-                                onclick="captureTime('salida_origen')">
-                            ⏰ Registrar
-                        </button>
+                <div class="card">
+                    <h2><span class="icon">🚚</span> Datos de Cargue</h2>
+                    <div class="form-group">
+                        <label for="choferCargue">Nombre del Chofer (Cargue):</label>
+                        <input type="text" id="choferCargue" name="choferCargue" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="horaLlegadaCarga">Hora Llegada Carga:</label>
+                        <input type="text" id="horaLlegadaCarga" name="horaLlegadaCarga" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="horaSalidaOrigen">Hora Salida Origen:</label>
+                        <input type="text" id="horaSalidaOrigen" name="horaSalidaOrigen" readonly>
                     </div>
                 </div>
 
-                <div class="subsection-title">🏪 Operación de Entrega o Descarga</div>
-
-                <div class="form-group">
-                    <label>📍 Hora de Llegada a Bodega Destino</label>
-                    <div class="time-group">
-                        <div class="time-display" id="display_llegada_destino">Sin registrar</div>
-                        <button type="button" class="btn-time" id="btn_llegada_destino"
-                                onclick="captureTime('llegada_destino')">
-                            ⏰ Registrar
-                        </button>
+                <div class="card">
+                    <h2><span class="icon"> unloading </span> Datos de Descargue</h2>
+                    <div class="form-group">
+                        <label for="choferDescarga">Nombre del Chofer (Descarga):</label>
+                        <input type="text" id="choferDescarga" name="choferDescarga">
+                    </div>
+                    <div class="form-group">
+                        <label for="horaLlegadaDestino">Hora Llegada Destino:</label>
+                        <input type="text" id="horaLlegadaDestino" name="horaLlegadaDestino" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="horaSalidaDestino">Hora Salida Destino:</label>
+                        <input type="text" id="horaSalidaDestino" name="horaSalidaDestino" readonly>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label>✅ Hora de Salida de Bodega Destino</label>
-                    <div class="time-group">
-                        <div class="time-display" id="display_salida_destino">Sin registrar</div>
-                        <button type="button" class="btn-time" id="btn_salida_destino"
-                                onclick="captureTime('salida_destino')">
-                            ⏰ Registrar
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SECCIÓN 3: RETORNO -->
-            <div class="section">
-                <div class="section-title">
-                    <span>3</span> Salida y Retorno a Patio
-                </div>
-
-                <div class="form-group">
-                    <label>♻️ ¿Retorna con desperdicios, devoluciones, pallets o vacío?</label>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" name="retorno" id="retorno_si" value="Si" onchange="toggleObservaciones()">
-                            <label for="retorno_si">✔️ Sí</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="retorno" id="retorno_no" value="No" onchange="toggleObservaciones()">
-                            <label for="retorno_no">❌ No / Vacío</label>
+                <div class="card">
+                    <h2><span class="icon">🔄</span> Retorno de Carga</h2>
+                    <div class="form-group">
+                        <label>¿Hay retorno de carga?</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="retorno" value="No" checked> No</label>
+                            <label><input type="radio" name="retorno" value="Si"> Sí</label>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="observaciones">Observaciones (solo si hay retorno):</label>
+                        <textarea id="observaciones" name="observaciones" placeholder="Detalles del retorno de carga"></textarea>
+                    </div>
                 </div>
 
-                <div class="form-group" id="observacionesGroup">
-                    <label>📝 Observaciones del Chofer</label>
-                    <textarea id="observaciones"
-                              placeholder="Indique: cantidad de pallets, cajas de devolución, tipo de desperdicio...&#10;&#10;Si viene vacío, escriba: VACÍO"></textarea>
-                    <p class="empty-note">💡 Si no trae nada, el campo se completará automáticamente como "VACÍO"</p>
-                </div>
-            </div>
-
-            <!-- Campos ocultos para almacenar datos -->
-            <input type="hidden" id="time_llegada_carga">
-            <input type="hidden" id="time_salida_origen">
-            <input type="hidden" id="time_llegada_destino">
-            <input type="hidden" id="time_salida_destino">
-            <!-- Nuevo campo oculto para indicar si estamos actualizando un registro -->
-            <input type="hidden" id="isUpdating" value="false">
-
-            <button type="submit" class="btn-submit">
-                <span id="btnText">📤 Enviar Registro</span>
-                <span id="btnSpinner" class="spinner" style="display:none;"></span>
-            </button>
-
-        </form>
+                <button type="submit" class="btn-submit">
+                    <span id="btnText">Enviar Datos</span>
+                    <div class="spinner" id="btnSpinner"></div>
+                </button>
+            </form>
+        </div>
     </div>
-</div>
 
-<!-- Modal de éxito -->
-<div class="success-modal" id="successModal">
-    <div class="modal-content">
-        <div class="modal-icon">✅</div>
-        <h2>¡Registro Enviado!</h2>
-        <p>La operación ha sido registrada exitosamente en Google Sheets.</p>
-        <button class="btn-modal" onclick="resetForm()">Nueva Operación</button>
+    <!-- Modal de éxito -->
+    <div class="modal-overlay success-modal" id="successModal">
+        <div class="modal-content">
+            <div class="modal-icon">✅</div>
+            <h2>¡Éxito!</h2>
+            <p>Los datos se han enviado y guardado correctamente.</p>
+            <button class="btn-modal" onclick="closeSuccessModal()">Aceptar</button>
+        </div>
     </div>
-</div>
 
-<!-- Modal de error -->
-<div class="error-modal" id="errorModal">
-    <div class="modal-content">
-        <div class="modal-icon">❌</div>
-        <h2>Error al Enviar</h2>
-        <p id="errorMsg">Hubo un problema. Verifica tu conexión a internet.</p>
-        <button class="btn-modal" onclick="closeErrorModal()">Reintentar</button>
+    <!-- Modal de error -->
+    <div class="modal-overlay error-modal" id="errorModal">
+        <div class="modal-content">
+            <div class="modal-icon">❌</div>
+            <h2>Error al Enviar</h2>
+            <p id="errorMsg">Hubo un problema. Verifica tu conexión a internet o la configuración del script.</p>
+            <button class="btn-modal" onclick="closeErrorModal()">Reintentar</button>
+        </div>
     </div>
-</div>
 
-<script>
-    // ⚠️ REEMPLAZA ESTO CON TU URL DE GOOGLE APPS SCRIPT ⚠️
-    const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzNGmftP-lkAMOy06XMLZuV2SXn0hTIF6xMBDxxMz8e4JQn7i2_lAioKR4L3etJaYZA1A/exec";
+    <script>
+        // ⚠️ REEMPLAZA ESTO CON TU URL DE GOOGLE APPS SCRIPT ⚠️
+        const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzNGmftP-lkAMOy06XMLZuV2SXn0hTIF6xMBDxxMz8e4JQn7i2_lAioKR4L3etJaYZA1A/exec";
 
-    // === RELOJ EN TIEMPO REAL ===
-    function updateClock() {
-        const now = new Date();
-        const days = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-        const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
-                        'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+        // === RELOJ EN TIEMPO REAL ===
+        function updateClock() {
+            const now = new Date();
+            const days = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+            const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                            'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
-        const dateStr = `${days[now.getDay()]}, ${now.getDate()} de ${months[now.getMonth()]} ${now.getFullYear()}`;
-        const timeStr = now.toTimeString().split(' ')[0];
+            const dateStr = `${days[now.getDay()]}, ${now.getDate()} de ${months[now.getMonth()]} de ${now.getFullYear()}`;
+            const timeStr = now.toLocaleTimeString('es-CO', {hour: '2-digit', minute:'2-digit', second:'2-digit', hour12: false});
 
-        document.getElementById('currentDate').textContent = dateStr;
-        document.getElementById('currentTime').textContent = timeStr;
+            document.getElementById('currentDate').textContent = dateStr;
+            document.getElementById('currentTime').textContent = timeStr;
 
-        if (!document.getElementById('registroFechaHora').value) {
-            document.getElementById('registroFechaHora').value =
-                `${now.toLocaleDateString('es-CO')} ${timeStr}`;
-        }
-    }
-
-    setInterval(updateClock, 1000);
-    updateClock();
-
-    // === CAPTURA DE HORAS ===
-    function captureTime(fieldId) {
-        const now = new Date();
-        const timeStr = now.toTimeString().split(' ')[0];
-        const fullDateTime = `${now.toLocaleDateString('es-CO')} ${timeStr}`;
-
-        document.getElementById('time_' + fieldId).value = fullDateTime;
-
-        const display = document.getElementById('display_' + fieldId);
-        display.textContent = `🕐 ${timeStr}`;
-        display.classList.add('captured');
-
-        const btn = document.getElementById('btn_' + fieldId);
-        btn.textContent = '✅ Registrado';
-        btn.classList.add('captured');
-        btn.disabled = true;
-    }
-
-    // === TOGGLE OBSERVACIONES ===
-    function toggleObservaciones() {
-        const retornoSi = document.getElementById('retorno_si').checked;
-        const obsTextarea = document.getElementById('observaciones');
-
-        if (!retornoSi) {
-            obsTextarea.value = 'VACÍO';
-            obsTextarea.classList.add('readonly-field');
-            obsTextarea.readOnly = true;
-        } else {
-            if (obsTextarea.value === 'VACÍO') obsTextarea.value = '';
-            obsTextarea.classList.remove('readonly-field');
-            obsTextarea.readOnly = false;
-            obsTextarea.placeholder = 'Indique: cantidad de pallets, cajas de devolución, tipo de desperdicio...';
-        }
-    }
-
-    // === GESTIÓN DE CAMPOS PARA ACTUALIZACIÓN / NUEVO REGISTRO ===
-    let searchTimeout;
-    document.getElementById('contenedor').addEventListener('input', () => {
-        clearTimeout(searchTimeout);
-        const contenedorInput = document.getElementById('contenedor');
-        if (contenedorInput.value.trim().length > 3) {
-            searchTimeout = setTimeout(() => searchContenedor(contenedorInput.value.trim()), 500);
-        } else {
-            resetFormForNewEntry();
-        }
-    });
-
-    // ✅ FUNCIÓN MEJORADA: BUSCA POR CD + CONTENEDOR
-    async function searchContenedor(contenedor) {
-        const ordenCD = document.getElementById('ordenCD').value.trim();
-        const searchFeedback = document.getElementById('searchFeedback');
-        searchFeedback.style.display = 'none';
-        searchFeedback.classList.remove('success', 'error', 'info');
-
-        // ⚠️ Validar que ambos campos tengan datos
-        if (!ordenCD) {
-            searchFeedback.textContent = "⚠️ Por favor completa el Número de Orden CD primero.";
-            searchFeedback.classList.add('error');
-            searchFeedback.style.display = 'flex';
-            resetFormForNewEntry();
-            return;
+            // Actualizar el campo oculto de fecha y hora para el envío
+            const fullDateTimeStr = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()} ${timeStr}`;
+            document.getElementById('registroFechaHora').value = fullDateTimeStr;
         }
 
-        if (!contenedor) {
-            resetFormForNewEntry();
-            return;
+        setInterval(updateClock, 1000);
+        updateClock(); // Llamada inicial para que se muestre inmediatamente
+
+        // === VALIDACIÓN Y CONFIGURACIÓN DE URL ===
+        document.addEventListener('DOMContentLoaded', () => {
+            if (GOOGLE_APPS_SCRIPT_URL.includes("TU_GOOGLE_APPS_SCRIPT_URL")) {
+                document.getElementById('configAlert').style.display = 'block';
+            }
+            // Inicializar formulario
+            resetForm();
+        });
+
+        // === FUNCIONES MODALES ===
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.remove('show');
+            resetForm(); // Limpiar el formulario después de un envío exitoso
         }
 
-        if (GOOGLE_APPS_SCRIPT_URL === "TU_GOOGLE_APPS_SCRIPT_URL") {
-            searchFeedback.textContent = "⚙️ Configuración: URL del script no válida.";
-            searchFeedback.classList.add('error');
-            searchFeedback.style.display = 'flex';
-            return;
+        function closeErrorModal() {
+            document.getElementById('errorModal').classList.remove('show');
+            // No resetForm aquí, para que el usuario pueda corregir y reintentar
         }
 
-        try {
-            // ✅ AHORA ENVÍA AMBOS PARÁMETROS: CD + CONTENEDOR
-            const url = `${GOOGLE_APPS_SCRIPT_URL}?action=search&ordenCD=${encodeURIComponent(ordenCD.toUpperCase())}&contenedor=${encodeURIComponent(contenedor.toUpperCase())}`;
-            const response = await fetch(url);
-            const result = await response.json();
+        function showErrorModal(message) {
+            document.getElementById('errorMsg').textContent = message;
+            document.getElementById('errorModal').classList.add('show');
+        }
 
-            if (result.found) {
-                // Modo Actualización
-                document.getElementById('isUpdating').value = 'true';
-                searchFeedback.textContent = "✅ Orden encontrada. Completa datos de descarga.";
-                searchFeedback.classList.add('success');
-                searchFeedback.style.display = 'flex';
-                populateFormForUpdate(result.data);
-            } else {
-                // Modo Nuevo Registro
-                document.getElementById('isUpdating').value = 'false';
-                searchFeedback.textContent = "➕ Nuevo registro. Completa los datos de cargue.";
+        // === RESETEAR FORMULARIO ===
+        function resetForm() {
+            document.getElementById('mainForm').reset();
+            document.getElementById('isUpdating').value = 'false';
+            document.getElementById('ordenCD').value = '';
+            document.getElementById('contenedor').value = '';
+            
+            // Habilitar campos de entrada por defecto
+            document.getElementById('ordenCD').readOnly = false;
+            document.getElementById('contenedor').readOnly = false;
+            document.getElementById('choferCargue').readOnly = false; // Asumiendo que el chofer de cargue se puede editar
+            document.getElementById('cliente').readOnly = false; // El cliente también debería ser editable por defecto
+
+            // Limpiar horas
+            document.getElementById('horaLlegadaCarga').value = '';
+            document.getElementById('horaSalidaOrigen').value = '';
+            document.getElementById('horaLlegadaDestino').value = '';
+            document.getElementById('horaSalidaDestino').value = '';
+            
+            document.getElementById('observaciones').readOnly = false;
+
+            // Ocultar feedback de búsqueda
+            const searchFeedback = document.getElementById('searchFeedback');
+            searchFeedback.style.display = 'none';
+            searchFeedback.classList.remove('success', 'error', 'info');
+
+            // Actualizar la fecha y hora de registro al resetear
+            updateClock();
+        }
+
+        // === BUSCAR DATOS ===
+        async function searchData() {
+            const ordenCDSearch = document.getElementById('ordenCDSearch').value.trim();
+            const contenedorSearch = document.getElementById('contenedorSearch').value.trim();
+            const searchFeedback = document.getElementById('searchFeedback');
+
+            searchFeedback.style.display = 'none';
+            searchFeedback.classList.remove('success', 'error', 'info');
+
+            if (!ordenCDSearch || !contenedorSearch) {
+                searchFeedback.textContent = "ℹ️ Por favor, ingrese el Nro. de Orden CD y el Nro. de Contenedor para buscar.";
                 searchFeedback.classList.add('info');
                 searchFeedback.style.display = 'flex';
-                resetFormForNewEntry();
+                return;
             }
-        } catch (error) {
-            console.error('Error buscando contenedor:', error);
-            searchFeedback.textContent = `❌ Error al buscar: ${error.message}`;
-            searchFeedback.classList.add('error');
-            searchFeedback.style.display = 'flex';
-            resetFormForNewEntry();
-        }
-    }
 
-    function populateFormForUpdate(data) {
-        document.getElementById('ordenCD').value = data.ordenCD || '';
-        document.getElementById('coordinador').value = data.coordinador || '';
-        document.getElementById('cliente').value = data.cliente || '';
-        document.getElementById('choferCargue').value = data.nombreChoferCargue || '';
-
-        // Marcar campos de cargue como solo lectura
-        document.getElementById('ordenCD').readOnly = true;
-        document.getElementById('coordinador').disabled = true;
-        document.getElementById('cliente').readOnly = true;
-        document.getElementById('choferCargue').readOnly = true;
-
-        document.getElementById('ordenCD').classList.add('readonly-field');
-        document.getElementById('coordinador').classList.add('readonly-field');
-        document.getElementById('cliente').classList.add('readonly-field');
-        document.getElementById('choferCargue').classList.add('readonly-field');
-
-        // Mostrar chofer de descarga
-        document.getElementById('choferCargueGroup').style.display = 'none';
-        document.getElementById('choferDescargaGroup').style.display = 'block';
-        document.getElementById('choferDescarga').value = data.nombreChoferDescarga || '';
-
-        // Desactivar botones de tiempo de cargue si ya están registrados
-        if (data.horaLlegadaCarga && data.horaLlegadaCarga !== 'No registrado') {
-            document.getElementById('time_llegada_carga').value = data.horaLlegadaCarga;
-            document.getElementById('display_llegada_carga').textContent = `🕐 ${data.horaLlegadaCarga.split(' ')[1] || ''}`;
-            document.getElementById('display_llegada_carga').classList.add('captured');
-            document.getElementById('btn_llegada_carga').textContent = '✅ Registrado';
-            document.getElementById('btn_llegada_carga').classList.add('captured');
-            document.getElementById('btn_llegada_carga').disabled = true;
-        }
-
-        if (data.horaSalidaOrigen && data.horaSalidaOrigen !== 'No registrado') {
-            document.getElementById('time_salida_origen').value = data.horaSalidaOrigen;
-            document.getElementById('display_salida_origen').textContent = `🕐 ${data.horaSalidaOrigen.split(' ')[1] || ''}`;
-            document.getElementById('display_salida_origen').classList.add('captured');
-            document.getElementById('btn_salida_origen').textContent = '✅ Registrado';
-            document.getElementById('btn_salida_origen').classList.add('captured');
-            document.getElementById('btn_salida_origen').disabled = true;
-        }
-
-        // Cargar tiempos de descarga si existen para editarlos/completarlos
-        if (data.horaLlegadaDestino && data.horaLlegadaDestino !== 'No registrado') {
-            document.getElementById('time_llegada_destino').value = data.horaLlegadaDestino;
-            document.getElementById('display_llegada_destino').textContent = `🕐 ${data.horaLlegadaDestino.split(' ')[1] || ''}`;
-            document.getElementById('display_llegada_destino').classList.add('captured');
-            document.getElementById('btn_llegada_destino').textContent = '✅ Registrado';
-            document.getElementById('btn_llegada_destino').classList.add('captured');
-            document.getElementById('btn_llegada_destino').disabled = true;
-        } else {
-             document.getElementById('display_llegada_destino').textContent = 'Sin registrar';
-             document.getElementById('display_llegada_destino').classList.remove('captured');
-             document.getElementById('btn_llegada_destino').textContent = '⏰ Registrar';
-             document.getElementById('btn_llegada_destino').classList.remove('captured');
-             document.getElementById('btn_llegada_destino').disabled = false;
-        }
-
-        if (data.horaSalidaDestino && data.horaSalidaDestino !== 'No registrado') {
-            document.getElementById('time_salida_destino').value = data.horaSalidaDestino;
-            document.getElementById('display_salida_destino').textContent = `🕐 ${data.horaSalidaDestino.split(' ')[1] || ''}`;
-            document.getElementById('display_salida_destino').classList.add('captured');
-            document.getElementById('btn_salida_destino').textContent = '✅ Registrado';
-            document.getElementById('btn_salida_destino').classList.add('captured');
-            document.getElementById('btn_salida_destino').disabled = true;
-        } else {
-            document.getElementById('display_salida_destino').textContent = 'Sin registrar';
-            document.getElementById('display_salida_destino').classList.remove('captured');
-            document.getElementById('btn_salida_destino').textContent = '⏰ Registrar';
-            document.getElementById('btn_salida_destino').classList.remove('captured');
-            document.getElementById('btn_salida_destino').disabled = false;
-        }
-
-        // Observaciones y retorno
-        if (data.retornoCarga === 'Si') {
-            document.getElementById('retorno_si').checked = true;
-        } else {
-            document.getElementById('retorno_no').checked = true;
-        }
-        toggleObservaciones();
-        document.getElementById('observaciones').value = data.observaciones || '';
-    }
-
-    function resetFormForNewEntry() {
-        document.getElementById('isUpdating').value = 'false';
-
-        // Habilitar campos de cargue
-        document.getElementById('ordenCD').readOnly = false;
-        document.getElementById('coordinador').disabled = false;
-        document.getElementById('cliente').readOnly = false;
-        document.getElementById('choferCargue').readOnly = false;
-
-        document.getElementById('ordenCD').classList.remove('readonly-field');
-        document.getElementById('coordinador').classList.remove('readonly-field');
-        document.getElementById('cliente').classList.remove('readonly-field');
-        document.getElementById('choferCargue').classList.remove('readonly-field');
-
-        document.getElementById('ordenCD').value = '';
-        document.getElementById('coordinador').value = '';
-        document.getElementById('cliente').value = '';
-        document.getElementById('choferCargue').value = '';
-
-        // Mostrar chofer de cargue y ocultar el de descarga
-        document.getElementById('choferCargueGroup').style.display = 'block';
-        document.getElementById('choferDescargaGroup').style.display = 'none';
-        document.getElementById('choferDescarga').value = '';
-
-        // Resetear botones y displays de tiempo
-        ['llegada_carga', 'salida_origen', 'llegada_destino', 'salida_destino'].forEach(id => {
-            const display = document.getElementById('display_' + id);
-            display.textContent = 'Sin registrar';
-            display.classList.remove('captured');
-
-            const btn = document.getElementById('btn_' + id);
-            btn.textContent = '⏰ Registrar';
-            btn.classList.remove('captured');
-            btn.disabled = false;
-
-            document.getElementById('time_' + id).value = '';
-        });
-
-        // Resetear observaciones
-        document.getElementById('retorno_si').checked = false;
-        document.getElementById('retorno_no').checked = false;
-        document.getElementById('observaciones').value = '';
-        document.getElementById('observaciones').classList.remove('readonly-field');
-        document.getElementById('observaciones').readOnly = false;
-
-        const searchFeedback = document.getElementById('searchFeedback');
-        searchFeedback.style.display = 'none';
-        searchFeedback.classList.remove('success', 'error', 'info');
-
-        document.getElementById('registroFechaHora').value =
-                `${new Date().toLocaleDateString('es-CO')} ${new Date().toTimeString().split(' ')[0]}`;
-    }
-
-    // === ENVÍO DEL FORMULARIO ===
-    async function submitForm(e) {
-        e.preventDefault();
-
-        const ordenCD = document.getElementById('ordenCD').value;
-        const coordinador = document.getElementById('coordinador').value;
-        const cliente = document.getElementById('cliente').value;
-        const contenedor = document.getElementById('contenedor').value;
-        const choferCargue = document.getElementById('choferCargue').value;
-        const choferDescarga = document.getElementById('choferDescarga').value;
-        const retorno = document.querySelector('input[name="retorno"]:checked');
-        const isUpdating = document.getElementById('isUpdating').value === 'true';
-
-        // Validaciones generales
-        if (!coordinador) { alert('⚠️ Por favor seleccione un coordinador.'); return; }
-        if (!cliente.trim()) { alert('⚠️ Por favor indique el nombre del cliente.'); return; }
-        if (!contenedor.trim()) { alert('⚠️ Por favor anote el número de contenedor.'); return; }
-        
-        const obsVal = document.getElementById('observaciones').value.trim();
-        if (retorno.value === 'Si' && !obsVal) {
-            alert('⚠️ Por favor complete las observaciones del chofer.');
-            return;
-        }
-
-        if (GOOGLE_APPS_SCRIPT_URL === "TU_GOOGLE_APPS_SCRIPT_URL") {
-            showErrorModal("⚠️ Error: Reemplaza 'TU_GOOGLE_APPS_SCRIPT_URL' con tu URL real.");
-            return;
-        }
-
-        // Validaciones específicas para cargue/descargue
-        if (!isUpdating) {
-            if (!ordenCD.trim()) { alert('⚠️ Por favor indique el número de Orden CD.'); return; }
-            if (!choferCargue.trim()) { alert('⚠️ Por favor indique el nombre del chofer de cargue.'); return; }
-        } else {
-            if (!choferDescarga.trim()) { alert('⚠️ Por favor indique el nombre del chofer de descarga.'); return; }
-        }
-
-        const formData = {
-            fechaHoraRegistro: document.getElementById('registroFechaHora').value,
-            ordenCD: ordenCD.toUpperCase(),
-            coordinador: coordinador,
-            cliente: cliente.trim(),
-            contenedor: contenedor.toUpperCase(),
-            nombreChoferCargue: choferCargue.trim(),
-            nombreChoferDescarga: choferDescarga.trim(),
-            horaLlegadaCarga: document.getElementById('time_llegada_carga').value || '',
-            horaSalidaOrigen: document.getElementById('time_salida_origen').value || '',
-            horaLlegadaDestino: document.getElementById('time_llegada_destino').value || '',
-            horaSalidaDestino: document.getElementById('time_salida_destino').value || '',
-            retornoCarga: retorno.value,
-            observaciones: obsVal || ''
-        };
-
-        // Mostrar spinner
-        document.getElementById('btnText').style.display = 'none';
-        document.getElementById('btnSpinner').style.display = 'inline-block';
-        document.getElementById('mainForm').querySelector('.btn-submit').disabled = true;
-
-        try {
-            const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify(formData),
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8',
-                },
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                console.log('✅ Datos enviados:', formData);
-                document.getElementById('successModal').classList.add('show');
-            } else {
-                showErrorModal('Error: ' + (result.error || 'Error desconocido'));
+            if (GOOGLE_APPS_SCRIPT_URL.includes("TU_GOOGLE_APPS_SCRIPT_URL")) {
+                searchFeedback.textContent = "⚙️ Configuración: La URL del script no ha sido actualizada. Por favor, reemplaza 'TU_GOOGLE_APPS_SCRIPT_URL' en el código.";
+                searchFeedback.classList.add('error');
+                searchFeedback.style.display = 'flex';
+                return;
             }
-        } catch (error) {
-            console.error('❌ Error:', error);
-            showErrorModal('Error de conexión: ' + error.message);
-        } finally {
-            document.getElementById('btnText').style.display = 'inline';
-            document.getElementById('btnSpinner').style.display = 'none';
-            document.getElementById('mainForm').querySelector('.btn-submit').disabled = false;
+
+            // Mostrar spinner y deshabilitar botón
+            document.getElementById('searchBtnText').style.display = 'none';
+            document.getElementById('searchBtnSpinner').style.display = 'inline-block';
+            document.querySelector('.search-group button').disabled = true;
+
+            try {
+                // Envía ambos parámetros: ordenCD y contenedor para la búsqueda
+                const url = `${GOOGLE_APPS_SCRIPT_URL}?action=search&ordenCD=${encodeURIComponent(ordenCDSearch.toUpperCase())}&contenedor=${encodeURIComponent(contenedorSearch.toUpperCase())}`;
+                const response = await fetch(url);
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    const data = result.data;
+                    document.getElementById('isUpdating').value = 'true';
+                    document.getElementById('ordenCD').value = data.ordenCD;
+                    document.getElementById('coordinador').value = data.coordinador || '';
+                    document.getElementById('cliente').value = data.cliente || '';
+                    document.getElementById('contenedor').value = data.contenedor;
+                    document.getElementById('choferCargue').value = data.choferCargue || '';
+                    document.getElementById('horaLlegadaCarga').value = data.horaLlegadaCarga || '';
+                    document.getElementById('horaSalidaOrigen').value = data.horaSalidaOrigen || '';
+                    document.getElementById('choferDescarga').value = data.choferDescarga || '';
+                    document.getElementById('horaLlegadaDestino').value = data.horaLlegadaDestino || '';
+                    document.getElementById('horaSalidaDestino').value = data.horaSalidaDestino || '';
+                    document.querySelector(`input[name="retorno"][value="${data.retorno || 'No'}"]`).checked = true;
+                    document.getElementById('observaciones').value = data.observaciones || '';
+
+                    // Si ya existe registro, bloquear edición de algunos campos
+                    document.getElementById('ordenCD').readOnly = true;
+                    document.getElementById('contenedor').readOnly = true;
+                    document.getElementById('choferCargue').readOnly = true;
+                    document.getElementById('cliente').readOnly = true;
+
+
+                    searchFeedback.textContent = "✅ Registro encontrado y cargado.";
+                    searchFeedback.classList.add('success');
+                    searchFeedback.style.display = 'flex';
+                } else if (result.success && !result.data) {
+                    // Si no se encuentra, pero la búsqueda fue exitosa (no hubo error en el script)
+                    document.getElementById('isUpdating').value = 'false';
+                    document.getElementById('ordenCD').value = ordenCDSearch.toUpperCase();
+                    document.getElementById('contenedor').value = contenedorSearch.toUpperCase();
+
+                    // Limpiar y habilitar para nueva entrada, pero mantener los de búsqueda
+                    document.getElementById('ordenCD').readOnly = true; // Sigue siendo de solo lectura
+                    document.getElementById('contenedor').readOnly = true; // Sigue siendo de solo lectura
+
+                    document.getElementById('choferCargue').value = '';
+                    document.getElementById('horaLlegadaCarga').value = '';
+                    document.getElementById('horaSalidaOrigen').value = '';
+                    document.getElementById('choferDescarga').value = '';
+                    document.getElementById('horaLlegadaDestino').value = '';
+                    document.getElementById('horaSalidaDestino').value = '';
+                    document.getElementById('observaciones').value = '';
+                    document.querySelector(`input[name="retorno"][value="No"]`).checked = true;
+
+
+                    searchFeedback.textContent = "ℹ️ No se encontró un registro. Rellenando con datos de búsqueda para una nueva entrada.";
+                    searchFeedback.classList.add('info');
+                    searchFeedback.style.display = 'flex';
+                } else {
+                    showErrorModal('Error al buscar: ' + (result.error || 'Error desconocido del servidor.'));
+                    searchFeedback.textContent = "❌ Error al buscar el registro.";
+                    searchFeedback.classList.add('error');
+                    searchFeedback.style.display = 'flex';
+                }
+            } catch (error) {
+                console.error('Error de red o parseo:', error);
+                showErrorModal('Error de conexión al buscar el registro. Inténtalo de nuevo.');
+                searchFeedback.textContent = "❌ Error de conexión al buscar.";
+                searchFeedback.classList.add('error');
+                searchFeedback.style.display = 'flex';
+            } finally {
+                // Ocultar spinner y habilitar botón
+                document.getElementById('searchBtnText').style.display = 'inline-block';
+                document.getElementById('searchBtnSpinner').style.display = 'none';
+                document.querySelector('.search-group button').disabled = false;
+            }
         }
-    }
 
-    function showErrorModal(msg) {
-        document.getElementById('errorMsg').textContent = msg;
-        document.getElementById('errorModal').classList.add('show');
-    }
+        // === ENVÍO DEL FORMULARIO ===
+        async function submitForm(e) {
+            e.preventDefault();
 
-    function closeErrorModal() {
-        document.getElementById('errorModal').classList.remove('show');
-    }
+            const ordenCD = document.getElementById('ordenCD').value;
+            const coordinador = document.getElementById('coordinador').value;
+            const cliente = document.getElementById('cliente').value;
+            const contenedor = document.getElementById('contenedor').value;
+            const choferCargue = document.getElementById('choferCargue').value;
+            const choferDescarga = document.getElementById('choferDescarga').value;
+            const retorno = document.querySelector('input[name="retorno"]:checked');
+            const isUpdating = document.getElementById('isUpdating').value === 'true';
 
-    function resetForm() {
-        document.getElementById('mainForm').reset();
-        document.getElementById('successModal').classList.remove('show');
+            // Validaciones generales
+            if (!coordinador) { alert('⚠️ Por favor seleccione un coordinador.'); return; }
+            if (!cliente.trim()) { alert('⚠️ Por favor indique el nombre del cliente.'); return; }
+            if (!contenedor.trim()) { alert('⚠️ Por favor anote el número de contenedor.'); return; }
+            
+            const obsVal = document.getElementById('observaciones').value.trim();
+            if (retorno.value === 'Si' && !obsVal) {
+                alert('⚠️ Si hay retorno, por favor complete las observaciones.');
+                return;
+            }
 
-        // Limpiar y habilitar todos los campos
-        document.getElementById('ordenCD').readOnly = false;
-        document.getElementById('ordenCD').classList.remove('readonly-field');
-        document.getElementById('coordinador').disabled = false;
-        document.getElementById('coordinador').classList.remove('readonly-field');
-        document.getElementById('cliente').readOnly = false;
-        document.getElementById('cliente').classList.remove('readonly-field');
-        document.getElementById('contenedor').readOnly = false;
-        document.getElementById('choferCargue').readOnly = false;
-        document.getElementById('choferCargue').classList.remove('readonly-field');
-        document.getElementById('choferDescarga').readOnly = false;
-        document.getElementById('choferDescarga').classList.remove('readonly-field');
+            if (GOOGLE_APPS_SCRIPT_URL.includes("TU_GOOGLE_APPS_SCRIPT_URL")) {
+                showErrorModal("⚠️ Error: La URL del script no ha sido actualizada. Por favor, reemplaza 'TU_GOOGLE_APPS_SCRIPT_URL' en el código.");
+                return;
+            }
 
-        document.getElementById('choferCargueGroup').style.display = 'block';
-        document.getElementById('choferDescargaGroup').style.display = 'none';
+            // Validaciones específicas para cargue/descargue (dependiendo si es nueva o actualización)
+            if (!isUpdating) { // Es una nueva entrada
+                if (!ordenCD.trim()) { alert('⚠️ Por favor ingrese el número de Orden CD.'); return; }
+                if (!choferCargue.trim()) { alert('⚠️ Por favor ingrese el nombre del chofer de cargue.'); return; }
+            } else { // Es una actualización
+                if (!choferDescarga.trim()) { alert('⚠️ Por favor ingrese el nombre del chofer de descarga.'); return; }
+            }
 
-        ['llegada_carga','salida_origen','llegada_destino','salida_destino'].forEach(id => {
-            const display = document.getElementById('display_' + id);
-            display.textContent = 'Sin registrar';
-            display.classList.remove('captured');
+            const formData = {
+                fechaHoraRegistro: document.getElementById('registroFechaHora').value,
+                ordenCD: ordenCD.toUpperCase(),
+                coordinador: coordinador,
+                cliente: cliente.trim(),
+                contenedor: contenedor.toUpperCase(),
+                choferCargue: choferCargue.trim(),
+                horaLlegadaCarga: document.getElementById('horaLlegadaCarga').value,
+                horaSalidaOrigen: document.getElementById('horaSalidaOrigen').value,
+                choferDescarga: choferDescarga.trim(),
+                horaLlegadaDestino: document.getElementById('horaLlegadaDestino').value,
+                horaSalidaDestino: document.getElementById('horaSalidaDestino').value,
+                retorno: retorno.value,
+                observaciones: obsVal,
+                action: isUpdating ? 'update' : 'add' // Determina si es una actualización o una nueva entrada
+            };
 
-            const btn = document.getElementById('btn_' + id);
-            btn.textContent = '⏰ Registrar';
-            btn.classList.remove('captured');
-            btn.disabled = false;
-
-            document.getElementById('time_' + id).value = '';
-        });
-
-        const obs = document.getElementById('observaciones');
-        obs.value = '';
-        obs.readOnly = false;
-        obs.classList.remove('readonly-field');
-
-        document.getElementById('registroFechaHora').value = '';
-        updateClock();
-
-        const searchFeedback = document.getElementById('searchFeedback');
-        searchFeedback.style.display = 'none';
-        searchFeedback.classList.remove('success', 'error', 'info');
-
-        document.getElementById('isUpdating').value = 'false';
-    }
-
-    window.addEventListener('load', () => {
-        if (GOOGLE_APPS_SCRIPT_URL === "TU_GOOGLE_APPS_SCRIPT_URL") {
-            document.getElementById('configAlert').classList.add('show');
-        }
-        updateClock();
-        document.getElementById('choferDescargaGroup').style.display = 'none';
-    });
-</script>
-</body>
-</html>
-
-
+            // Para actualizaciones, solo envía el choferDescarga y las horas de descarga/retorno/observaciones
+            if (isUpdating) {
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString('es-CO', {hour: '2
