@@ -712,28 +712,22 @@
 </div>
 
 <script>
-    // ⚠️ REEMPLAZA ESTO CON TU URL DE GOOGLE APPS SCRIPT ⚠️
+    // ⚠️ TU URL DE GOOGLE APPS SCRIPT ⚠️
     const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzNGmftP-lkAMOy06XMLZuV2SXn0hTIF6xMBDxxMz8e4JQn7i2_lAioKR4L3etJaYZA1A/exec";
 
     // === RELOJ EN TIEMPO REAL ===
     function updateClock() {
         const now = new Date();
         const days = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-        const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
-                        'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-
+        const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
         const dateStr = `${days[now.getDay()]}, ${now.getDate()} de ${months[now.getMonth()]} ${now.getFullYear()}`;
         const timeStr = now.toTimeString().split(' ')[0];
-
         document.getElementById('currentDate').textContent = dateStr;
         document.getElementById('currentTime').textContent = timeStr;
-
         if (!document.getElementById('registroFechaHora').value) {
-            document.getElementById('registroFechaHora').value =
-                `${now.toLocaleDateString('es-CO')} ${timeStr}`;
+            document.getElementById('registroFechaHora').value = `${now.toLocaleDateString('es-CO')} ${timeStr}`;
         }
     }
-
     setInterval(updateClock, 1000);
     updateClock();
 
@@ -742,24 +736,20 @@
         const now = new Date();
         const timeStr = now.toTimeString().split(' ')[0];
         const fullDateTime = `${now.toLocaleDateString('es-CO')} ${timeStr}`;
-
         document.getElementById('time_' + fieldId).value = fullDateTime;
-
         const display = document.getElementById('display_' + fieldId);
         display.textContent = `🕐 ${timeStr}`;
         display.classList.add('captured');
-
         const btn = document.getElementById('btn_' + fieldId);
         btn.textContent = '✅ Registrado';
         btn.classList.add('captured');
         btn.disabled = true;
     }
 
-    // === TOGGLE OBSERVACIONES ===
+    // === OBSERVACIONES ===
     function toggleObservaciones() {
         const retornoSi = document.getElementById('retorno_si').checked;
         const obsTextarea = document.getElementById('observaciones');
-
         if (!retornoSi) {
             obsTextarea.value = 'VACÍO';
             obsTextarea.classList.add('readonly-field');
@@ -768,364 +758,151 @@
             if (obsTextarea.value === 'VACÍO') obsTextarea.value = '';
             obsTextarea.classList.remove('readonly-field');
             obsTextarea.readOnly = false;
-            obsTextarea.placeholder = 'Indique: cantidad de pallets, cajas de devolución, tipo de desperdicio...';
         }
     }
 
-    // === GESTIÓN DE CAMPOS PARA ACTUALIZACIÓN / NUEVO REGISTRO ===
+    // === VALIDACIÓN Y BÚSQUEDA (CORREGIDO PARA NO BORRAR) ===
     let searchTimeout;
-    document.getElementById('contenedor').addEventListener('input', () => {
-        clearTimeout(searchTimeout);
-        const contenedorInput = document.getElementById('contenedor');
-        if (contenedorInput.value.trim().length > 3) {
-            searchTimeout = setTimeout(() => searchContenedor(contenedorInput.value.trim()), 500);
-        } else {
-            resetFormForNewEntry();
-        }
+    const ordenCDInput = document.getElementById('ordenCD');
+    const contenedorInput = document.getElementById('contenedor');
+
+    [ordenCDInput, contenedorInput].forEach(el => {
+        el.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            // Quitamos espacios para validar internamente
+            const cd = ordenCDInput.value.replace(/\s+/g, '').toUpperCase();
+            const cont = contenedorInput.value.replace(/\s+/g, '').toUpperCase();
+
+            // Solo busca si ambos tienen datos
+            if (cd.length > 0 && cont.length > 3) {
+                searchTimeout = setTimeout(() => searchContenedor(cd, cont), 700);
+            }
+        });
     });
 
-    // ✅ FUNCIÓN MEJORADA: BUSCA POR CD + CONTENEDOR
-    async function searchContenedor(contenedor) {
-        const ordenCD = document.getElementById('ordenCD').value.trim();
-        const searchFeedback = document.getElementById('searchFeedback');
-        searchFeedback.style.display = 'none';
-        searchFeedback.classList.remove('success', 'error', 'info');
-
-        // ⚠️ Validar que ambos campos tengan datos
-        if (!ordenCD) {
-            searchFeedback.textContent = "⚠️ Por favor completa el Número de Orden CD primero.";
-            searchFeedback.classList.add('error');
-            searchFeedback.style.display = 'flex';
-            resetFormForNewEntry();
-            return;
-        }
-
-        if (!contenedor) {
-            resetFormForNewEntry();
-            return;
-        }
-
-        if (GOOGLE_APPS_SCRIPT_URL === "TU_GOOGLE_APPS_SCRIPT_URL") {
-            searchFeedback.textContent = "⚙️ Configuración: URL del script no válida.";
-            searchFeedback.classList.add('error');
-            searchFeedback.style.display = 'flex';
-            return;
-        }
-
+    async function searchContenedor(cd, cont) {
+        const feedback = document.getElementById('searchFeedback');
         try {
-            // ✅ AHORA ENVÍA AMBOS PARÁMETROS: CD + CONTENEDOR
-            const url = `${GOOGLE_APPS_SCRIPT_URL}?action=search&ordenCD=${encodeURIComponent(ordenCD.toUpperCase())}&contenedor=${encodeURIComponent(contenedor.toUpperCase())}`;
+            const url = `${GOOGLE_APPS_SCRIPT_URL}?action=search&ordenCD=${encodeURIComponent(cd)}&contenedor=${encodeURIComponent(cont)}`;
             const response = await fetch(url);
             const result = await response.json();
 
             if (result.found) {
-                // Modo Actualización
                 document.getElementById('isUpdating').value = 'true';
-                searchFeedback.textContent = "✅ Orden encontrada. Completa datos de descarga.";
-                searchFeedback.classList.add('success');
-                searchFeedback.style.display = 'flex';
-                populateFormForUpdate(result.data);
+                feedback.textContent = "✅ Registro de CARGUE encontrado.";
+                feedback.className = 'search-feedback success';
+                feedback.style.display = 'flex';
+                populateFormForUpdate(result.data); // Función que marcaste en amarillo
             } else {
-                // Modo Nuevo Registro
                 document.getElementById('isUpdating').value = 'false';
-                searchFeedback.textContent = "➕ Nuevo registro. Completa los datos de cargue.";
-                searchFeedback.classList.add('info');
-                searchFeedback.style.display = 'flex';
-                resetFormForNewEntry();
+                feedback.textContent = "➕ Nuevo registro (Operación de CARGUE).";
+                feedback.className = 'search-feedback info';
+                feedback.style.display = 'flex';
+                // IMPORTANTE: Aquí ya NO llamamos a resetForm, así no se borra lo que escribiste
+                prepararParaNuevoRegistro();
             }
-        } catch (error) {
-            console.error('Error buscando contenedor:', error);
-            searchFeedback.textContent = `❌ Error al buscar: ${error.message}`;
-            searchFeedback.classList.add('error');
-            searchFeedback.style.display = 'flex';
-            resetFormForNewEntry();
-        }
+        } catch (e) { console.error(e); }
     }
 
+    // ESTA ES LA FUNCIÓN QUE VISTE EN AMARILLO (CORREGIDA)
     function populateFormForUpdate(data) {
-        document.getElementById('ordenCD').value = data.ordenCD || '';
+        document.getElementById('isUpdating').value = 'true';
+        
+        // Bloqueamos para que no cambien la orden mientras descargan
+        ordenCDInput.readOnly = true;
+        ordenCDInput.classList.add('readonly-field');
+        contenedorInput.readOnly = true;
+        contenedorInput.classList.add('readonly-field');
+
         document.getElementById('coordinador').value = data.coordinador || '';
-        document.getElementById('cliente').value = data.cliente || '';
-        document.getElementById('choferCargue').value = data.nombreChoferCargue || '';
-
-        // Marcar campos de cargue como solo lectura
-        document.getElementById('ordenCD').readOnly = true;
         document.getElementById('coordinador').disabled = true;
+        document.getElementById('cliente').value = data.cliente || '';
         document.getElementById('cliente').readOnly = true;
-        document.getElementById('choferCargue').readOnly = true;
 
-        document.getElementById('ordenCD').classList.add('readonly-field');
-        document.getElementById('coordinador').classList.add('readonly-field');
-        document.getElementById('cliente').classList.add('readonly-field');
-        document.getElementById('choferCargue').classList.add('readonly-field');
-
-        // Mostrar chofer de descarga
+        // Chofer de cargue se bloquea (ya fue registrado)
+        document.getElementById('choferCargue').value = data.nombreChoferCargue || '';
         document.getElementById('choferCargueGroup').style.display = 'none';
+
+        // Habilitamos campo para el Chofer de Descarga
         document.getElementById('choferDescargaGroup').style.display = 'block';
-        document.getElementById('choferDescarga').value = data.nombreChoferDescarga || '';
 
-        // Desactivar botones de tiempo de cargue si ya están registrados
-        if (data.horaLlegadaCarga && data.horaLlegadaCarga !== 'No registrado') {
-            document.getElementById('time_llegada_carga').value = data.horaLlegadaCarga;
-            document.getElementById('display_llegada_carga').textContent = `🕐 ${data.horaLlegadaCarga.split(' ')[1] || ''}`;
-            document.getElementById('display_llegada_carga').classList.add('captured');
-            document.getElementById('btn_llegada_carga').textContent = '✅ Registrado';
-            document.getElementById('btn_llegada_carga').classList.add('captured');
-            document.getElementById('btn_llegada_carga').disabled = true;
-        }
-
-        if (data.horaSalidaOrigen && data.horaSalidaOrigen !== 'No registrado') {
-            document.getElementById('time_salida_origen').value = data.horaSalidaOrigen;
-            document.getElementById('display_salida_origen').textContent = `🕐 ${data.horaSalidaOrigen.split(' ')[1] || ''}`;
-            document.getElementById('display_salida_origen').classList.add('captured');
-            document.getElementById('btn_salida_origen').textContent = '✅ Registrado';
-            document.getElementById('btn_salida_origen').classList.add('captured');
-            document.getElementById('btn_salida_origen').disabled = true;
-        }
-
-        // Cargar tiempos de descarga si existen para editarlos/completarlos
-        if (data.horaLlegadaDestino && data.horaLlegadaDestino !== 'No registrado') {
-            document.getElementById('time_llegada_destino').value = data.horaLlegadaDestino;
-            document.getElementById('display_llegada_destino').textContent = `🕐 ${data.horaLlegadaDestino.split(' ')[1] || ''}`;
-            document.getElementById('display_llegada_destino').classList.add('captured');
-            document.getElementById('btn_llegada_destino').textContent = '✅ Registrado';
-            document.getElementById('btn_llegada_destino').classList.add('captured');
-            document.getElementById('btn_llegada_destino').disabled = true;
-        } else {
-             document.getElementById('display_llegada_destino').textContent = 'Sin registrar';
-             document.getElementById('display_llegada_destino').classList.remove('captured');
-             document.getElementById('btn_llegada_destino').textContent = '⏰ Registrar';
-             document.getElementById('btn_llegada_destino').classList.remove('captured');
-             document.getElementById('btn_llegada_destino').disabled = false;
-        }
-
-        if (data.horaSalidaDestino && data.horaSalidaDestino !== 'No registrado') {
-            document.getElementById('time_salida_destino').value = data.horaSalidaDestino;
-            document.getElementById('display_salida_destino').textContent = `🕐 ${data.horaSalidaDestino.split(' ')[1] || ''}`;
-            document.getElementById('display_salida_destino').classList.add('captured');
-            document.getElementById('btn_salida_destino').textContent = '✅ Registrado';
-            document.getElementById('btn_salida_destino').classList.add('captured');
-            document.getElementById('btn_salida_destino').disabled = true;
-        } else {
-            document.getElementById('display_salida_destino').textContent = 'Sin registrar';
-            document.getElementById('display_salida_destino').classList.remove('captured');
-            document.getElementById('btn_salida_destino').textContent = '⏰ Registrar';
-            document.getElementById('btn_salida_destino').classList.remove('captured');
-            document.getElementById('btn_salida_destino').disabled = false;
-        }
-
-        // Observaciones y retorno
-        if (data.retornoCarga === 'Si') {
-            document.getElementById('retorno_si').checked = true;
-        } else {
-            document.getElementById('retorno_no').checked = true;
-        }
-        toggleObservaciones();
-        document.getElementById('observaciones').value = data.observaciones || '';
+        // Rellenar horas existentes
+        const fields = ['llegada_carga', 'salida_origen', 'llegada_destino', 'salida_destino'];
+        fields.forEach(f => {
+            const val = data['hora' + f.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('')];
+            if (val && val !== 'No registrado') {
+                document.getElementById('time_' + f).value = val;
+                const disp = document.getElementById('display_' + f);
+                disp.textContent = `🕐 ${val.split(' ')[1] || ''}`;
+                disp.classList.add('captured');
+                const b = document.getElementById('btn_' + f);
+                b.textContent = '✅ Registrado';
+                b.classList.add('captured');
+                b.disabled = true;
+            }
+        });
     }
 
-    function resetFormForNewEntry() {
-        document.getElementById('isUpdating').value = 'false';
-
-        // Habilitar campos de cargue
-        document.getElementById('ordenCD').readOnly = false;
+    function prepararParaNuevoRegistro() {
+        // Habilitamos todo por si antes estaba bloqueado, pero NO borramos valores de CD o Contenedor
+        ordenCDInput.readOnly = false;
+        ordenCDInput.classList.remove('readonly-field');
+        contenedorInput.readOnly = false;
+        contenedorInput.classList.remove('readonly-field');
         document.getElementById('coordinador').disabled = false;
         document.getElementById('cliente').readOnly = false;
-        document.getElementById('choferCargue').readOnly = false;
-
-        document.getElementById('ordenCD').classList.remove('readonly-field');
-        document.getElementById('coordinador').classList.remove('readonly-field');
-        document.getElementById('cliente').classList.remove('readonly-field');
-        document.getElementById('choferCargue').classList.remove('readonly-field');
-
-        document.getElementById('ordenCD').value = '';
-        document.getElementById('coordinador').value = '';
-        document.getElementById('cliente').value = '';
-        document.getElementById('choferCargue').value = '';
-
-        // Mostrar chofer de cargue y ocultar el de descarga
         document.getElementById('choferCargueGroup').style.display = 'block';
         document.getElementById('choferDescargaGroup').style.display = 'none';
-        document.getElementById('choferDescarga').value = '';
-
-        // Resetear botones y displays de tiempo
-        ['llegada_carga', 'salida_origen', 'llegada_destino', 'salida_destino'].forEach(id => {
-            const display = document.getElementById('display_' + id);
-            display.textContent = 'Sin registrar';
-            display.classList.remove('captured');
-
-            const btn = document.getElementById('btn_' + id);
-            btn.textContent = '⏰ Registrar';
-            btn.classList.remove('captured');
-            btn.disabled = false;
-
-            document.getElementById('time_' + id).value = '';
-        });
-
-        // Resetear observaciones
-        document.getElementById('retorno_si').checked = false;
-        document.getElementById('retorno_no').checked = false;
-        document.getElementById('observaciones').value = '';
-        document.getElementById('observaciones').classList.remove('readonly-field');
-        document.getElementById('observaciones').readOnly = false;
-
-        const searchFeedback = document.getElementById('searchFeedback');
-        searchFeedback.style.display = 'none';
-        searchFeedback.classList.remove('success', 'error', 'info');
-
-        document.getElementById('registroFechaHora').value =
-                `${new Date().toLocaleDateString('es-CO')} ${new Date().toTimeString().split(' ')[0]}`;
     }
 
-    // === ENVÍO DEL FORMULARIO ===
     async function submitForm(e) {
         e.preventDefault();
-
-        const ordenCD = document.getElementById('ordenCD').value;
-        const coordinador = document.getElementById('coordinador').value;
-        const cliente = document.getElementById('cliente').value;
-        const contenedor = document.getElementById('contenedor').value;
-        const choferCargue = document.getElementById('choferCargue').value;
-        const choferDescarga = document.getElementById('choferDescarga').value;
-        const retorno = document.querySelector('input[name="retorno"]:checked');
-        const isUpdating = document.getElementById('isUpdating').value === 'true';
-
-        // Validaciones generales
-        if (!coordinador) { alert('⚠️ Por favor seleccione un coordinador.'); return; }
-        if (!cliente.trim()) { alert('⚠️ Por favor indique el nombre del cliente.'); return; }
-        if (!contenedor.trim()) { alert('⚠️ Por favor anote el número de contenedor.'); return; }
+        const btnText = document.getElementById('btnText');
+        const btnSpinner = document.getElementById('btnSpinner');
         
-        const obsVal = document.getElementById('observaciones').value.trim();
-        if (retorno.value === 'Si' && !obsVal) {
-            alert('⚠️ Por favor complete las observaciones del chofer.');
-            return;
-        }
+        // Normalización de datos para Excel (sin espacios)
+        const cleanCD = ordenCDInput.value.replace(/\s+/g, '').toUpperCase();
+        const cleanCont = contenedorInput.value.replace(/\s+/g, '').toUpperCase();
 
-        if (GOOGLE_APPS_SCRIPT_URL === "TU_GOOGLE_APPS_SCRIPT_URL") {
-            showErrorModal("⚠️ Error: Reemplaza 'TU_GOOGLE_APPS_SCRIPT_URL' con tu URL real.");
-            return;
-        }
-
-        // Validaciones específicas para cargue/descargue
-        if (!isUpdating) {
-            if (!ordenCD.trim()) { alert('⚠️ Por favor indique el número de Orden CD.'); return; }
-            if (!choferCargue.trim()) { alert('⚠️ Por favor indique el nombre del chofer de cargue.'); return; }
-        } else {
-            if (!choferDescarga.trim()) { alert('⚠️ Por favor indique el nombre del chofer de descarga.'); return; }
-        }
-
-        const formData = {
+        const data = {
             fechaHoraRegistro: document.getElementById('registroFechaHora').value,
-            ordenCD: ordenCD.toUpperCase(),
-            coordinador: coordinador,
-            cliente: cliente.trim(),
-            contenedor: contenedor.toUpperCase(),
-            nombreChoferCargue: choferCargue.trim(),
-            nombreChoferDescarga: choferDescarga.trim(),
-            horaLlegadaCarga: document.getElementById('time_llegada_carga').value || '',
-            horaSalidaOrigen: document.getElementById('time_salida_origen').value || '',
-            horaLlegadaDestino: document.getElementById('time_llegada_destino').value || '',
-            horaSalidaDestino: document.getElementById('time_salida_destino').value || '',
-            retornoCarga: retorno.value,
-            observaciones: obsVal || ''
+            ordenCD: cleanCD,
+            contenedor: cleanCont,
+            coordinador: document.getElementById('coordinador').value,
+            cliente: document.getElementById('cliente').value.trim(),
+            nombreChoferCargue: document.getElementById('choferCargue').value.trim(),
+            nombreChoferDescarga: document.getElementById('choferDescarga').value.trim(),
+            horaLlegadaCarga: document.getElementById('time_llegada_carga').value,
+            horaSalidaOrigen: document.getElementById('time_salida_origen').value,
+            horaLlegadaDestino: document.getElementById('time_llegada_destino').value,
+            horaSalidaDestino: document.getElementById('time_salida_destino').value,
+            retornoCarga: document.querySelector('input[name="retorno"]:checked')?.value || 'No',
+            observaciones: document.getElementById('observaciones').value.trim()
         };
 
-        // Mostrar spinner
-        document.getElementById('btnText').style.display = 'none';
-        document.getElementById('btnSpinner').style.display = 'inline-block';
-        document.getElementById('mainForm').querySelector('.btn-submit').disabled = true;
+        btnText.style.display = 'none';
+        btnSpinner.style.display = 'inline-block';
 
         try {
-            const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+            const res = await fetch(GOOGLE_APPS_SCRIPT_URL, {
                 method: 'POST',
-                body: JSON.stringify(formData),
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8',
-                },
+                body: JSON.stringify(data),
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }
             });
-
-            const result = await response.json();
-
-            if (result.success) {
-                console.log('✅ Datos enviados:', formData);
-                document.getElementById('successModal').classList.add('show');
-            } else {
-                showErrorModal('Error: ' + (result.error || 'Error desconocido'));
-            }
-        } catch (error) {
-            console.error('❌ Error:', error);
-            showErrorModal('Error de conexión: ' + error.message);
-        } finally {
-            document.getElementById('btnText').style.display = 'inline';
-            document.getElementById('btnSpinner').style.display = 'none';
-            document.getElementById('mainForm').querySelector('.btn-submit').disabled = false;
+            const result = await res.json();
+            if (result.success) document.getElementById('successModal').classList.add('show');
+        } catch (err) { alert("Error: " + err.message); }
+        finally {
+            btnText.style.display = 'inline';
+            btnSpinner.style.display = 'none';
         }
     }
 
-    function showErrorModal(msg) {
-        document.getElementById('errorMsg').textContent = msg;
-        document.getElementById('errorModal').classList.add('show');
-    }
+    function resetForm() { location.reload(); }
 
-    function closeErrorModal() {
-        document.getElementById('errorModal').classList.remove('show');
-    }
-
-    function resetForm() {
-        document.getElementById('mainForm').reset();
-        document.getElementById('successModal').classList.remove('show');
-
-        // Limpiar y habilitar todos los campos
-        document.getElementById('ordenCD').readOnly = false;
-        document.getElementById('ordenCD').classList.remove('readonly-field');
-        document.getElementById('coordinador').disabled = false;
-        document.getElementById('coordinador').classList.remove('readonly-field');
-        document.getElementById('cliente').readOnly = false;
-        document.getElementById('cliente').classList.remove('readonly-field');
-        document.getElementById('contenedor').readOnly = false;
-        document.getElementById('choferCargue').readOnly = false;
-        document.getElementById('choferCargue').classList.remove('readonly-field');
-        document.getElementById('choferDescarga').readOnly = false;
-        document.getElementById('choferDescarga').classList.remove('readonly-field');
-
-        document.getElementById('choferCargueGroup').style.display = 'block';
+    window.onload = () => {
         document.getElementById('choferDescargaGroup').style.display = 'none';
-
-        ['llegada_carga','salida_origen','llegada_destino','salida_destino'].forEach(id => {
-            const display = document.getElementById('display_' + id);
-            display.textContent = 'Sin registrar';
-            display.classList.remove('captured');
-
-            const btn = document.getElementById('btn_' + id);
-            btn.textContent = '⏰ Registrar';
-            btn.classList.remove('captured');
-            btn.disabled = false;
-
-            document.getElementById('time_' + id).value = '';
-        });
-
-        const obs = document.getElementById('observaciones');
-        obs.value = '';
-        obs.readOnly = false;
-        obs.classList.remove('readonly-field');
-
-        document.getElementById('registroFechaHora').value = '';
-        updateClock();
-
-        const searchFeedback = document.getElementById('searchFeedback');
-        searchFeedback.style.display = 'none';
-        searchFeedback.classList.remove('success', 'error', 'info');
-
-        document.getElementById('isUpdating').value = 'false';
-    }
-
-    window.addEventListener('load', () => {
-        if (GOOGLE_APPS_SCRIPT_URL === "TU_GOOGLE_APPS_SCRIPT_URL") {
-            document.getElementById('configAlert').classList.add('show');
-        }
-        updateClock();
-        document.getElementById('choferDescargaGroup').style.display = 'none';
-    });
+    };
 </script>
 </body>
 </html>
